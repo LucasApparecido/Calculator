@@ -19,7 +19,7 @@ public class Screen extends JFrame {
         setResizable(false);
         setLocation(100, 100);
         getContentPane().setLayout(new BorderLayout());
-        setIconImage(new ImageIcon("./logo.png").getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
 
         buildLayout();
 
