@@ -36,11 +36,13 @@ public class Screen extends JFrame {
         display.setFont(new Font("Times New Roman", Font.BOLD, 24));
         display.setHorizontalAlignment(JTextField.RIGHT);
         setDisplaySize(display, 300, 50);
+        display.setBackground(new Color(252, 252, 252));
+        display.setEnabled(false);
         mainPanel.add(display, BorderLayout.NORTH);
 
         // Painel para os botões numéricos e de operação
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 4, 4, 4)); // 4 linhas, 4 colunas
+        buttonPanel.setLayout(new GridLayout(4, 4)); // 4 linhas, 4 colunas
 
         // Rótulos para os botões
         String[] buttonLabels = {
@@ -54,8 +56,19 @@ public class Screen extends JFrame {
         buttons = new JButton[buttonLabels.length];
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
-            buttons[i].setFont(new Font("Times New Roman", Font.BOLD, 18));
+            buttons[i].setFont(new Font("Times New Roman", Font.BOLD, 24));
             setButtonSize(buttons[i], 70, 70); // Define o tamanho desejado para cada botão
+
+            if(buttonLabels[i] == "C") {
+                buttons[i].setForeground(new Color(4,42,43));
+                buttons[i].setBackground(new Color(244,224,77));
+            } else if(buttonLabels[i].matches("[0-9]")) {
+                buttons[i].setForeground(new Color(4,42,43));
+                buttons[i].setBackground(new Color(84,242,242));
+            } else if(buttonLabels[i].matches("[+\\-*./]")) {
+                buttons[i].setForeground(new Color(252, 252, 252));
+                buttons[i].setBackground(new Color(94, 177, 191));
+            }
             buttonPanel.add(buttons[i]);
         }
 
@@ -64,8 +77,10 @@ public class Screen extends JFrame {
 
         // Botão de igual
         JButton buttonEqual = new JButton("=");
-        buttonEqual.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        buttonEqual.setFont(new Font("Times New Roman", Font.BOLD, 30));
         setButtonSize(buttonEqual, 70, 70); // Define o tamanho desejado para o botão de igual
+        buttonEqual.setForeground(new Color(252, 252, 252));
+        buttonEqual.setBackground(new Color(4,42,43));
         mainPanel.add(buttonEqual, BorderLayout.SOUTH);
 
         // Adicionar o painel principal ao JFrame
