@@ -6,13 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Screen extends JFrame {
+    private static Screen instance;
     private JTextField display;
     private JButton[] buttons;
 
     public static final int width = 350;
     public static final int height = 550;
 
-    public Screen() {
+    private Screen() {
         setTitle("Calculadora");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(Screen.width, Screen.height);
@@ -24,6 +25,13 @@ public class Screen extends JFrame {
         buildLayout();
 
         setVisible(true);
+    }
+
+    public static Screen getInstance() {
+        if (instance == null) {
+            instance = new Screen();
+        }
+        return instance;
     }
 
     private void buildLayout() {
