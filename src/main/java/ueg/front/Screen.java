@@ -43,7 +43,7 @@ public class Screen extends JFrame {
         display = new JTextField();
         display.setFont(new Font("Times New Roman", Font.BOLD, 24));
         display.setHorizontalAlignment(JTextField.RIGHT);
-        setDisplaySize(display, 300, 50);
+        display.setPreferredSize(new Dimension(300, 50));
         display.setBackground(new Color(252, 252, 252));
         display.setEnabled(false);
         mainPanel.add(display, BorderLayout.NORTH);
@@ -65,7 +65,7 @@ public class Screen extends JFrame {
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
             buttons[i].setFont(new Font("Times New Roman", Font.BOLD, 24));
-            setButtonSize(buttons[i], 70, 70); // Define o tamanho desejado para cada botão
+            buttons[i].setPreferredSize(new Dimension(70, 70)); // Define o tamanho desejado para cada botão
 
             if(buttonLabels[i] == "C") {
                 buttons[i].setForeground(new Color(4,42,43));
@@ -86,20 +86,12 @@ public class Screen extends JFrame {
         // Botão de igual
         JButton buttonEqual = new JButton("=");
         buttonEqual.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        setButtonSize(buttonEqual, 70, 70); // Define o tamanho desejado para o botão de igual
+        buttonEqual.setPreferredSize(new Dimension(70, 70));  // Define o tamanho desejado para o botão de igual
         buttonEqual.setForeground(new Color(252, 252, 252));
         buttonEqual.setBackground(new Color(4,42,43));
         mainPanel.add(buttonEqual, BorderLayout.SOUTH);
 
         // Adicionar o painel principal ao JFrame
         getContentPane().add(mainPanel);
-    }
-
-    private void setButtonSize(JButton button, int width, int height) {
-        button.setPreferredSize(new Dimension(width, height));
-    }
-
-    private void setDisplaySize(JTextField display, int width, int height) {
-        display.setPreferredSize(new Dimension(width, height));
     }
 }
