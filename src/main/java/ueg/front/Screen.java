@@ -1,14 +1,28 @@
 package ueg.front;
 
+import ueg.back.Command.AdditionCommand;
+import ueg.back.Command.DivisionCommand;
+import ueg.back.Command.MultiplicationCommand;
+import ueg.back.Command.SubtractionCommand;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class Screen extends JFrame {
     private static Screen instance;
     private JTextField display;
     private JButton[] buttons;
+    private JButton buttonEqual;
+
+    private String[] buttonLabels;
+
+    private JPanel mainPanel;
+    private JPanel buttonPanel;
+
+    private Action actionListener;
 
     public static final int width = 350;
     public static final int height = 550;
@@ -22,7 +36,10 @@ public class Screen extends JFrame {
         getContentPane().setLayout(new BorderLayout());
         setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
 
+        actionListener = new Action();
+
         buildLayout();
+
 
         setVisible(true);
     }
@@ -36,7 +53,7 @@ public class Screen extends JFrame {
 
     private void buildLayout() {
         // Painel principal para conter todos os componentes
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
         // Visor
@@ -45,19 +62,20 @@ public class Screen extends JFrame {
         display.setHorizontalAlignment(JTextField.RIGHT);
         display.setPreferredSize(new Dimension(300, 50));
         display.setBackground(new Color(252, 252, 252));
+        display.setForeground(new Color(4, 42, 43));
         display.setEnabled(false);
         mainPanel.add(display, BorderLayout.NORTH);
 
         // Painel para os botões numéricos e de operação
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 4)); // 4 linhas, 4 colunas
 
         // Rótulos para os botões
-        String[] buttonLabels = {
+        buttonLabels = new String[]{
                 "+", "7", "8", "9",
                 "-", "4", "5", "6",
                 "*", "1", "2", "3",
-                "/", ".", "0", "C"
+                "/", ".", "0", "C",
         };
 
         // Adicionar botões ao painel
@@ -67,15 +85,18 @@ public class Screen extends JFrame {
             buttons[i].setFont(new Font("Times New Roman", Font.BOLD, 24));
             buttons[i].setPreferredSize(new Dimension(70, 70)); // Define o tamanho desejado para cada botão
 
-            if(buttonLabels[i] == "C") {
-                buttons[i].setForeground(new Color(4,42,43));
-                buttons[i].setBackground(new Color(244,224,77));
-            } else if(buttonLabels[i].matches("[0-9]")) {
-                buttons[i].setForeground(new Color(4,42,43));
-                buttons[i].setBackground(new Color(84,242,242));
-            } else if(buttonLabels[i].matches("[+\\-*./]")) {
+            if (buttonLabels[i].equals("C")) {
+                buttons[i].setForeground(new Color(4, 42, 43));
+                buttons[i].setBackground(new Color(244, 224, 77));
+                buttons[i].addActionListener(actionListener);
+            } else if (buttonLabels[i].matches("[0-9]")) {
+                buttons[i].setForeground(new Color(4, 42, 43));
+                buttons[i].setBackground(new Color(84, 242, 242));
+                buttons[i].addActionListener(actionListener);
+            } else if (buttonLabels[i].matches("[+\\-*./]")) {
                 buttons[i].setForeground(new Color(252, 252, 252));
                 buttons[i].setBackground(new Color(94, 177, 191));
+                buttons[i].addActionListener(actionListener);
             }
             buttonPanel.add(buttons[i]);
         }
@@ -84,14 +105,103 @@ public class Screen extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Botão de igual
-        JButton buttonEqual = new JButton("=");
+        buttonEqual = new JButton("=");
         buttonEqual.setFont(new Font("Times New Roman", Font.BOLD, 30));
         buttonEqual.setPreferredSize(new Dimension(70, 70));  // Define o tamanho desejado para o botão de igual
         buttonEqual.setForeground(new Color(252, 252, 252));
-        buttonEqual.setBackground(new Color(4,42,43));
+        buttonEqual.setBackground(new Color(4, 42, 43));
+        buttonEqual.addActionListener(actionListener);
         mainPanel.add(buttonEqual, BorderLayout.SOUTH);
 
         // Adicionar o painel principal ao JFrame
         getContentPane().add(mainPanel);
+    }
+
+    class Action implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton source = (JButton) e.getSource();
+            String buttonText = source.getText();
+
+            if (display.getText().equals("Sem operador")) {
+                display.setText("");
+            } else if (display.getText().equals("Divisão por zero")) {
+                display.setText("");
+            }
+
+            switch (buttonText) {
+                case "+":
+                    display.setText(display.getText() + " " + buttonText + " ");
+                    break;
+                case "-":
+                    display.setText(display.getText() + " " + buttonText + " ");
+                    break;
+                case "*":
+                    display.setText(display.getText() + " " + buttonText + " ");
+                    break;
+                case "/":
+                    display.setText(display.getText() + " " + buttonText + " ");
+                    break;
+                case ".":
+                    display.setText(display.getText() + buttonText);
+                    break;
+                case "=":
+                    try {
+                        calculateResult();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                case "C":
+                    display.setText("");
+                    break;
+                default:
+                    // Assume que é um número
+                    display.setText(display.getText() + buttonText);
+                    break;
+            }
+        }
+
+        private void calculateResult() throws Exception {
+            String expression = display.getText();
+
+            // Divida a expressão em partes usando os espaços
+            String[] parts = expression.split(" ");
+
+            if (parts.length != 3) {
+                // Expressão inválida
+                display.setText("Sem operador");
+                return;
+            }
+
+            String operator = parts[1];
+
+            int result = (int) 0.0;
+
+
+            switch (operator) {
+                case "+":
+                    result = AdditionCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    break;
+                case "-":
+                    result = SubtractionCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    break;
+                case "*":
+                    result = MultiplicationCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    break;
+                case "/":
+                    if(Integer.parseInt(parts[2]) == 0) {
+                        display.setText("Divisão por zero");
+                        throw new IllegalArgumentException("Divisão por zero não permitida.");
+                    }
+                    result = DivisionCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    break;
+            }
+
+            // Exibir o resultado
+            display.setText(String.valueOf(result));
+        }
+
+
     }
 }

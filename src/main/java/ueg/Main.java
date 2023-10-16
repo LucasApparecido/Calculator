@@ -1,7 +1,5 @@
 package ueg;
 
-import ueg.front.Screen;
-
 import static ueg.front.Screen.getInstance;
 
 public class Main {
