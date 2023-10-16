@@ -1,9 +1,6 @@
 package ueg.front;
 
-import ueg.back.Command.AdditionCommand;
-import ueg.back.Command.DivisionCommand;
-import ueg.back.Command.MultiplicationCommand;
-import ueg.back.Command.SubtractionCommand;
+import ueg.back.ConnectOperation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,11 +49,9 @@ public class Screen extends JFrame {
     }
 
     private void buildLayout() {
-        // Painel principal para conter todos os componentes
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        // Visor
         display = new JTextField();
         display.setFont(new Font("Times New Roman", Font.BOLD, 24));
         display.setHorizontalAlignment(JTextField.RIGHT);
@@ -66,11 +61,9 @@ public class Screen extends JFrame {
         display.setEnabled(false);
         mainPanel.add(display, BorderLayout.NORTH);
 
-        // Painel para os botões numéricos e de operação
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 4)); // 4 linhas, 4 colunas
 
-        // Rótulos para os botões
         buttonLabels = new String[]{
                 "+", "7", "8", "9",
                 "-", "4", "5", "6",
@@ -78,7 +71,6 @@ public class Screen extends JFrame {
                 "/", ".", "0", "C",
         };
 
-        // Adicionar botões ao painel
         buttons = new JButton[buttonLabels.length];
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
@@ -101,10 +93,8 @@ public class Screen extends JFrame {
             buttonPanel.add(buttons[i]);
         }
 
-        // Adicionar o painel de botões ao painel principal
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        // Botão de igual
         buttonEqual = new JButton("=");
         buttonEqual.setFont(new Font("Times New Roman", Font.BOLD, 30));
         buttonEqual.setPreferredSize(new Dimension(70, 70));  // Define o tamanho desejado para o botão de igual
@@ -113,7 +103,6 @@ public class Screen extends JFrame {
         buttonEqual.addActionListener(actionListener);
         mainPanel.add(buttonEqual, BorderLayout.SOUTH);
 
-        // Adicionar o painel principal ao JFrame
         getContentPane().add(mainPanel);
     }
 
@@ -165,7 +154,6 @@ public class Screen extends JFrame {
         private void calculateResult() throws Exception {
             String expression = display.getText();
 
-            // Divida a expressão em partes usando os espaços
             String[] parts = expression.split(" ");
 
             if (parts.length != 3) {
@@ -176,29 +164,28 @@ public class Screen extends JFrame {
 
             String operator = parts[1];
 
-            int result = (int) 0.0;
+            float result = 0.0F;
 
 
             switch (operator) {
                 case "+":
-                    result = AdditionCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    result = ConnectOperation.execute(Float.parseFloat(parts[0]), Float.parseFloat(parts[2]), 12345);
                     break;
                 case "-":
-                    result = SubtractionCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    result = ConnectOperation.execute(Float.parseFloat(parts[0]), Float.parseFloat(parts[2]), 12348);
                     break;
                 case "*":
-                    result = MultiplicationCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    result = ConnectOperation.execute(Float.parseFloat(parts[0]), Float.parseFloat(parts[2]), 12347);
                     break;
                 case "/":
                     if(Integer.parseInt(parts[2]) == 0) {
                         display.setText("Divisão por zero");
                         throw new IllegalArgumentException("Divisão por zero não permitida.");
                     }
-                    result = DivisionCommand.execute(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
+                    result = ConnectOperation.execute(Float.parseFloat(parts[0]), Float.parseFloat(parts[2]), 12346);
                     break;
             }
 
-            // Exibir o resultado
             display.setText(String.valueOf(result));
         }
 
