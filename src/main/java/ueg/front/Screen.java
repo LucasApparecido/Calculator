@@ -116,6 +116,8 @@ public class Screen extends JFrame {
                 display.setText("");
             } else if (display.getText().equals("Divisão por zero")) {
                 display.setText("");
+            } else if (display.getText().equals("Servidor não encontrado")) {
+                display.setText("");
             }
 
             switch (buttonText) {
@@ -189,6 +191,9 @@ public class Screen extends JFrame {
             display.setText(String.valueOf(result));
         }
 
+    }
 
+    public void setDisplay(String text){
+        display.setText(text);
     }
 }
